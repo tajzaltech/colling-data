@@ -1,3 +1,5 @@
+"use client";
+
 import { ClipboardCheck, Calendar, MapPin, Clock, Plus, Search, Filter, Eye, Edit2, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
