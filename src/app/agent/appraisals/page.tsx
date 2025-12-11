@@ -1,95 +1,213 @@
 "use client";
 
-import { ClipboardCheck, Calendar, MapPin, CheckCircle, Clock } from "lucide-react";
+import { ClipboardCheck, Calendar, MapPin, CheckCircle, Clock, Plus, Search, Filter, Eye, Edit2, Trash2, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function AppraisalsPage() {
+    // Mock Appraisals Data
+    const [appraisals, setAppraisals] = useState([
+        {
+            id: 1,
+            address: "88 Toorak Road, South Yarra",
+            client: "Michael Chen",
+            date: "Today, 2:00 PM",
+            status: "Scheduled",
+            estValue: "$2.4M - $2.6M",
+            type: "Sales Appraisal",
+            image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80"
+        },
+        {
+            id: 2,
+            address: "15 Osborne Street, South Yarra",
+            client: "Sarah Jessica",
+            date: "Tomorrow, 10:00 AM",
+            status: "Pending",
+            estValue: "TBD",
+            type: "Rental Appraisal",
+            image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80"
+        },
+        {
+            id: 3,
+            address: "4/22 Chapel Street, Windsor",
+            client: "Tom Wilson",
+            date: "Yesterday",
+            status: "Completed",
+            estValue: "$850k - $920k",
+            type: "Sales Appraisal",
+            image: "https://images.unsplash.com/photo-1484154218962-a1c002085d2f?auto=format&fit=crop&q=80"
+        },
+        {
+            id: 4,
+            address: "102/55 Commercial Rd, Prahran",
+            client: "Emily Davis",
+            date: "Aug 12, 4:00 PM",
+            status: "Completed",
+            estValue: "$600k - $650k",
+            type: "Sales Appraisal",
+            image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80"
+        },
+    ]);
+
+    const handleDelete = (id: number) => {
+        if (confirm("Are you sure you want to delete this appraisal?")) {
+            setAppraisals(appraisals.filter(a => a.id !== id));
+        }
+    };
+
     return (
-        <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto', background: '#ffffff', minHeight: 'calc(100vh - 80px)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto', fontFamily: 'sans-serif' }}>
+
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
                 <div>
-                    <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#5ec5cf', marginBottom: '0.5rem' }}>
+                    <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#1e293b', marginBottom: '0.5rem', letterSpacing: '-0.025em' }}>
                         Appraisals
                     </h1>
                     <p style={{ fontSize: '1rem', color: '#64748b' }}>
-                        Manage property valuations and presentation requests
+                        Manage valuation requests and simple presentations.
                     </p>
                 </div>
                 <button style={{
                     padding: '0.75rem 1.5rem',
                     background: '#5ec5cf',
                     color: 'white',
-                    borderRadius: '0.5rem',
+                    borderRadius: '0.75rem',
                     fontWeight: '600',
-                    fontSize: '0.875rem',
+                    fontSize: '0.9rem',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
-                    cursor: 'pointer'
+                    border: 'none',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 6px -1px rgba(94, 197, 207, 0.4)'
                 }}>
-                    <ClipboardCheck size={18} />
+                    <Plus size={18} />
                     New Appraisal
                 </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
-                {/* Active Appraisals */}
-                {[
-                    { address: "88 Toorak Road, South Yarra", client: "Michael Chen", date: "Today, 2:00 PM", status: "Scheduled", value: "$2.4M - $2.6M" },
-                    { address: "15 Osborne Street, South Yarra", client: "Sarah Jessica", date: "Tomorrow, 10:00 AM", status: "Scheduled", value: "TBD" },
-                    { address: "4/22 Chapel Street, Windsor", client: "Tom Wilson", date: "Yesterday", status: "Completed", value: "$850k - $920k" },
-                ].map((item, i) => (
-                    <div key={i} style={{
-                        background: 'white',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '1rem',
-                        padding: '1.5rem',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
-                        transition: 'transform 0.2s',
-                        cursor: 'pointer'
-                    }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                            <div style={{
-                                padding: '0.5rem',
-                                borderRadius: '0.5rem',
-                                background: item.status === 'Completed' ? '#dcfce7' : '#e0f2fe',
-                                color: item.status === 'Completed' ? '#16a34a' : '#0284c7'
-                            }}>
-                                {item.status === 'Completed' ? <CheckCircle size={20} /> : <Calendar size={20} />}
-                            </div>
-                            <span style={{
-                                fontSize: '0.75rem',
-                                fontWeight: '600',
-                                color: item.status === 'Completed' ? '#16a34a' : '#0284c7',
-                                background: item.status === 'Completed' ? '#dcfce7' : '#e0f2fe',
-                                padding: '0.25rem 0.75rem',
-                                borderRadius: '99px',
-                                display: 'flex',
-                                alignItems: 'center'
-                            }}>
-                                {item.status}
-                            </span>
-                        </div>
-
-                        <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#5ec5cf', marginBottom: '0.25rem' }}>
-                            {item.address}
-                        </h3>
-                        <p style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '1rem' }}>
-                            Client: {item.client}
-                        </p>
-
-                        <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: '#64748b' }}>
-                                <Clock size={16} />
-                                {item.date}
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: '#5ec5cf', fontWeight: '600' }}>
-                                <MapPin size={16} style={{ color: '#5ec5cf' }} />
-                                Est. {item.value}
-                            </div>
-                        </div>
+            {/* Stats / Overview */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                <div style={{ background: 'white', padding: '1.5rem', borderRadius: '1rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
+                    <div>
+                        <div style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem', fontWeight: '600' }}>Scheduled</div>
+                        <div style={{ fontSize: '1.75rem', fontWeight: '800', color: '#1e293b' }}>2</div>
                     </div>
+                    <div style={{ width: '3rem', height: '3rem', borderRadius: '0.75rem', background: '#e0f2fe', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Calendar size={24} color="#0284c7" />
+                    </div>
+                </div>
+                <div style={{ background: 'white', padding: '1.5rem', borderRadius: '1rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
+                    <div>
+                        <div style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem', fontWeight: '600' }}>Completed (Mth)</div>
+                        <div style={{ fontSize: '1.75rem', fontWeight: '800', color: '#1e293b' }}>12</div>
+                    </div>
+                    <div style={{ width: '3rem', height: '3rem', borderRadius: '0.75rem', background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <ClipboardCheck size={24} color="#16a34a" />
+                    </div>
+                </div>
+                <div style={{ background: 'white', padding: '1.5rem', borderRadius: '1rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>
+                    <div>
+                        <div style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '0.25rem', fontWeight: '600' }}>Pipeline Value</div>
+                        <div style={{ fontSize: '1.75rem', fontWeight: '800', color: '#1e293b' }}>$15.2M</div>
+                    </div>
+                    <div style={{ width: '3rem', height: '3rem', borderRadius: '0.75rem', background: '#fff7ed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <MapPin size={24} color="#ea580c" />
+                    </div>
+                </div>
+            </div>
+
+            {/* List */}
+            <div style={{ display: 'grid', gap: '1.5rem' }}>
+                {appraisals.map((item) => (
+                    <motion.div
+                        key={item.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        style={{
+                            background: 'white',
+                            borderRadius: '1.25rem',
+                            border: '1px solid #e2e8f0',
+                            padding: '1.25rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            boxShadow: '0 2px 4px -1px rgba(0,0,0,0.05)',
+                            gap: '1.5rem'
+                        }}
+                    >
+                        {/* Left: Image & Info */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flex: 1 }}>
+                            <div style={{
+                                width: '6rem',
+                                height: '4.5rem',
+                                borderRadius: '0.75rem',
+                                overflow: 'hidden',
+                                flexShrink: 0
+                            }}>
+                                <img src={item.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            </div>
+                            <div>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#1e293b', marginBottom: '0.25rem' }}>{item.address}</h3>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.9rem', color: '#64748b' }}>
+                                    <span>{item.type}</span>
+                                    <span style={{ width: '4px', height: '4px', background: '#cbd5e1', borderRadius: '50%' }} />
+                                    <span>{item.client}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Middle: Details */}
+                        <div style={{ display: 'flex', gap: '2.5rem', paddingRight: '2rem' }}>
+                            <div>
+                                <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: '0.25rem', fontWeight: '600' }}>DATE & TIME</div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: '600', color: '#475569' }}>
+                                    <Clock size={16} /> {item.date}
+                                </div>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: '0.25rem', fontWeight: '600' }}>EST. VALUE</div>
+                                <div style={{ fontSize: '0.9rem', fontWeight: '700', color: '#5ec5cf' }}>
+                                    {item.estValue}
+                                </div>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: '0.25rem', fontWeight: '600' }}>STATUS</div>
+                                <span style={{
+                                    fontSize: '0.75rem',
+                                    padding: '0.25rem 0.75rem',
+                                    background: item.status === 'Completed' ? '#dcfce7' : item.status === 'Pending' ? '#fff7ed' : '#e0f2fe',
+                                    color: item.status === 'Completed' ? '#15803d' : item.status === 'Pending' ? '#c2410c' : '#0369a1',
+                                    borderRadius: '99px',
+                                    fontWeight: '700',
+                                    display: 'inline-block'
+                                }}>
+                                    {item.status}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Right: Actions */}
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <button style={{ padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #e2e8f0', background: 'white', color: '#64748b', cursor: 'pointer' }}>
+                                <Eye size={18} />
+                            </button>
+                            <button style={{ padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #e2e8f0', background: 'white', color: '#3b82f6', cursor: 'pointer' }}>
+                                <Edit2 size={18} />
+                            </button>
+                            <button
+                                onClick={() => handleDelete(item.id)}
+                                style={{ padding: '0.6rem', borderRadius: '0.5rem', border: '1px solid #fee2e2', background: '#fef2f2', color: '#ef4444', cursor: 'pointer' }}
+                            >
+                                <Trash2 size={18} />
+                            </button>
+                        </div>
+
+                    </motion.div>
                 ))}
             </div>
+
         </div>
     );
 }

@@ -1,27 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import { Search, MapPin, Filter, Bed, Bath, Car, ArrowRight, Home, Building2, Briefcase, Trees, SearchCheck, TrendingUp, Building, Heart } from "lucide-react";
+import { Search, MapPin, Filter, Bed, Bath, Car, ArrowRight, Home, Building2, Briefcase, Trees, SearchCheck, Heart } from "lucide-react";
 import Link from "next/link";
-import { mockProperties, mockMarketStats } from "@/lib/mockData";
+import { mockProperties } from "@/lib/mockData";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ConsumerHome() {
   const [filterType, setFilterType] = useState('All');
+  const [listingMode, setListingMode] = useState<'Buy' | 'Rent' | 'Sold'>('Buy');
   const [searchQuery, setSearchQuery] = useState('');
 
-  /* Simple state for demonstration - in real app would use strict filters */
+  /* Filter Logic */
   const filteredProperties = mockProperties.filter(p => {
+    // 1. Filter by Listing Mode (Buy, Rent, Sold)
+    let matchesMode = false;
+    if (listingMode === 'Buy') matchesMode = p.status === 'active';
+    if (listingMode === 'Rent') matchesMode = p.status === 'rent';
+    if (listingMode === 'Sold') matchesMode = p.status === 'sold';
+
+    // 2. Filter by Type (House, Apartment, etc.)
     const matchesType = filterType === 'All' || p.type === filterType;
+
+    // 3. Filter by Search
     const matchesSearch = p.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.suburb.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesType && matchesSearch;
+
+    return matchesMode && matchesType && matchesSearch;
   });
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: 'sans-serif' }}>
 
-      {/* Navbar Placeholder for "Loving" feel */}
+      {/* Navbar */}
       <nav style={{ padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1600px', margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#5ec5cf', fontWeight: 'bold', fontSize: '1.25rem' }}>
           <div style={{ width: '32px', height: '32px', background: '#5ec5cf', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
@@ -29,17 +40,46 @@ export default function ConsumerHome() {
           </div>
           Collings
         </div>
-        <div style={{ display: 'flex', gap: '2rem', fontSize: '0.925rem', color: '#64748b', fontWeight: '500' }}>
-          <button onClick={() => setFilterType('All')} style={{ background: 'none', border: 'none', color: '#0f172a', fontWeight: '600', cursor: 'pointer', fontSize: 'inherit' }}>Buy</button>
-          <button style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 'inherit' }}>Rent</button>
-          <button style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 'inherit' }}>Sold</button>
-          <Link href="/agent" style={{ textDecoration: 'none', color: '#64748b', cursor: 'pointer' }}>Agents</Link>
+
+        {/* Main Navigation Tabs */}
+        <div style={{
+          display: 'flex',
+          gap: '0.5rem',
+          background: 'white',
+          padding: '0.35rem',
+          borderRadius: '999px',
+          boxShadow: '0 2px 5px rgba(0,0,0,0.03)',
+          border: '1px solid #f1f5f9'
+        }}>
+          {['Buy', 'Rent', 'Sold'].map((mode) => (
+            <button
+              key={mode}
+              onClick={() => setListingMode(mode as any)}
+              style={{
+                background: listingMode === mode ? '#1e293b' : 'transparent',
+                color: listingMode === mode ? 'white' : '#64748b',
+                border: 'none',
+                padding: '0.5rem 1.5rem',
+                borderRadius: '999px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                transition: 'all 0.2s'
+              }}
+            >
+              {mode}
+            </button>
+          ))}
         </div>
-        <Link href="/signin">
-          <button style={{ padding: '0.6rem 1.25rem', background: '#5ec5cf', color: 'white', borderRadius: '99px', border: 'none', fontWeight: 'bold', fontSize: '0.875rem', cursor: 'pointer', boxShadow: '0 4px 6px -1px rgba(94, 197, 207, 0.3)' }}>
-            Sign In
-          </button>
-        </Link>
+
+        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          <Link href="/agent" style={{ textDecoration: 'none', color: '#64748b', cursor: 'pointer', fontWeight: '600', fontSize: '0.9rem' }}>Agent Portal</Link>
+          <Link href="/signin">
+            <button style={{ padding: '0.6rem 1.25rem', background: '#5ec5cf', color: 'white', borderRadius: '99px', border: 'none', fontWeight: 'bold', fontSize: '0.875rem', cursor: 'pointer', boxShadow: '0 4px 6px -1px rgba(94, 197, 207, 0.3)' }}>
+              Sign In
+            </button>
+          </Link>
+        </div>
       </nav>
 
       {/* Hero Section */}
@@ -49,13 +89,14 @@ export default function ConsumerHome() {
         textAlign: 'center',
         overflow: 'hidden'
       }}>
-        {/* Soft Gradients */}
+        {/* Soft Background Gradient */}
         <div style={{ position: 'absolute', top: '-50%', left: '50%', transform: 'translate(-50%, 0)', width: '80%', height: '800px', background: 'radial-gradient(circle, rgba(94, 197, 207, 0.08) 0%, rgba(255,255,255,0) 70%)', pointerEvents: 'none' }} />
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          key={listingMode} // Re-animate on mode switch
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
           style={{ position: 'relative', zIndex: 10, maxWidth: '900px', margin: '0 auto' }}
         >
           <div style={{
@@ -84,15 +125,16 @@ export default function ConsumerHome() {
             marginBottom: '1.5rem',
             letterSpacing: '-0.03em'
           }}>
-            Discover a place <br />
-            <span style={{ color: '#5ec5cf' }}>you'll love to live.</span>
+            {listingMode === 'Buy' && <>Find your dream <br /> <span style={{ color: '#5ec5cf' }}>home to buy.</span></>}
+            {listingMode === 'Rent' && <>Find a rental <br /> <span style={{ color: '#5ec5cf' }}>you'll love.</span></>}
+            {listingMode === 'Sold' && <>Track market <br /> <span style={{ color: '#5ec5cf' }}>sold prices.</span></>}
           </h1>
 
           <p style={{ fontSize: '1.25rem', color: '#64748b', marginBottom: '3.5rem', lineHeight: 1.6, maxWidth: '600px', margin: '0 auto 3.5rem auto' }}>
-            Explore Melbourne's most comprehensive property listings, powered by deep data intelligence and curated for you.
+            Explore Melbourne's most comprehensive {listingMode.toLowerCase()} listings, powered by deep data intelligence.
           </p>
 
-          {/* Search Bar - "Most Loving" Design */}
+          {/* Search Bar */}
           <div style={{
             background: 'white',
             padding: '0.75rem',
@@ -108,7 +150,7 @@ export default function ConsumerHome() {
             <Search size={24} style={{ marginLeft: '1rem', color: '#94a3b8' }} />
             <input
               type="text"
-              placeholder="Search suburb, postcode, or street address..."
+              placeholder={`Search ${listingMode.toLowerCase()} properties...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{
@@ -137,25 +179,10 @@ export default function ConsumerHome() {
             </button>
           </div>
 
-          <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center', gap: '3rem', opacity: 0.6 }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b' }}>50k+</div>
-              <div style={{ fontSize: '0.875rem', color: '#64748b' }}>Properties</div>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b' }}>120+</div>
-              <div style={{ fontSize: '0.875rem', color: '#64748b' }}>Suburbs</div>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b' }}>24/7</div>
-              <div style={{ fontSize: '0.875rem', color: '#64748b' }}>Updates</div>
-            </div>
-          </div>
-
         </motion.div>
       </section>
 
-      {/* Filter Section */}
+      {/* Filter Chips */}
       <section style={{ maxWidth: '1600px', margin: '0 auto', padding: '0 2rem 4rem 2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
           {['All', 'House', 'Apartment', 'Commercial', 'Land'].map((type) => (
@@ -191,17 +218,20 @@ export default function ConsumerHome() {
         {/* Results Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: '2rem' }}>
           <div>
-            <h2 style={{ fontSize: '2rem', fontWeight: '800', color: '#1e293b', marginBottom: '0.5rem' }}>Features Listings</h2>
-            <div style={{ color: '#64748b', fontSize: '1rem' }}>Hand-picked properties for you in Melbourne</div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', fontWeight: '600', color: '#5ec5cf', cursor: 'pointer' }}>
-            View All <ArrowRight size={16} />
+            <h2 style={{ fontSize: '2rem', fontWeight: '800', color: '#1e293b', marginBottom: '0.5rem' }}>
+              {listingMode === 'Buy' ? 'Homes for Sale' :
+                listingMode === 'Rent' ? 'Rental Properties' :
+                  'Recently Sold'}
+            </h2>
+            <div style={{ color: '#64748b', fontSize: '1rem' }}>
+              Found {filteredProperties.length} properties in Melbourne
+            </div>
           </div>
         </div>
 
         {/* Property Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '2rem' }}>
-          <AnimatePresence>
+          <AnimatePresence mode="popLayout">
             {filteredProperties.map((property, index) => (
               <motion.div
                 key={property.id}
@@ -235,7 +265,6 @@ export default function ConsumerHome() {
                     <div style={{ height: '260px', position: 'relative', overflow: 'hidden' }}>
                       <img src={property.image} alt={property.address} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
 
-                      {/* Like Button */}
                       <button style={{
                         position: 'absolute',
                         top: '1rem',
@@ -254,7 +283,6 @@ export default function ConsumerHome() {
                         <Heart size={20} />
                       </button>
 
-                      {/* Badges */}
                       <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', display: 'flex', gap: '0.5rem' }}>
                         <span style={{
                           background: 'rgba(255,255,255,0.95)',
@@ -266,18 +294,22 @@ export default function ConsumerHome() {
                         }}>
                           {property.type}
                         </span>
-                        {property.status === 'active' && (
-                          <span style={{
-                            background: '#10b981',
-                            padding: '0.35rem 0.75rem',
-                            borderRadius: '0.5rem',
-                            fontSize: '0.75rem',
-                            fontWeight: '700',
-                            color: 'white'
-                          }}>
-                            Active
-                          </span>
-                        )}
+
+                        <span style={{
+                          background:
+                            property.status === 'active' ? '#10b981' :
+                              property.status === 'rent' ? '#3b82f6' :
+                                '#f59e0b',
+                          padding: '0.35rem 0.75rem',
+                          borderRadius: '0.5rem',
+                          fontSize: '0.75rem',
+                          fontWeight: '700',
+                          color: 'white',
+                          textTransform: 'capitalize'
+                        }}>
+                          {property.status === 'rent' ? 'For Rent' : property.status}
+                        </span>
+
                       </div>
                     </div>
 
@@ -285,7 +317,9 @@ export default function ConsumerHome() {
                     <div style={{ padding: '1.5rem' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                         <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#5ec5cf' }}>
-                          ${(property.price / 1000000).toFixed(2)}m
+                          {property.status === 'rent'
+                            ? `$${property.price}/wk`
+                            : `$${(property.price / 1000000).toFixed(2)}m`}
                         </div>
                       </div>
 
@@ -317,6 +351,13 @@ export default function ConsumerHome() {
               </motion.div>
             ))}
           </AnimatePresence>
+
+          {filteredProperties.length === 0 && (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem', color: '#94a3b8' }}>
+              <p style={{ fontSize: '1.25rem' }}>No listings found for your search.</p>
+              <button onClick={() => { setFilterType('All'); setSearchQuery('') }} style={{ marginTop: '1rem', color: '#5ec5cf', textDecoration: 'underline', border: 'none', background: 'none', cursor: 'pointer', fontSize: '1rem' }}>Clear Filters</button>
+            </div>
+          )}
         </div>
       </section>
 

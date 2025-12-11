@@ -73,8 +73,49 @@ export const mockProperties = [
     status: 'active' as const,
     type: 'Land',
     source: 'REIP'
+  // --- RENTAL LISTINGS ---
+  {
+    id: 'RENT-7001',
+    address: '5/102 St Kilda Rd',
+    suburb: 'St Kilda',
+    state: 'VIC',
+    price: 650, // Per week
+    beds: 2,
+    baths: 1,
+    cars: 1,
+    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800',
+    status: 'rent' as const,
+    type: 'Apartment',
+    source: 'Rental Feed'
   },
-
+  {
+    id: 'RENT-7002',
+    address: '15 Queens Lane',
+    suburb: 'Melbourne',
+    state: 'VIC',
+    price: 850,
+    beds: 3,
+    baths: 2,
+    cars: 1,
+    image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800',
+    status: 'rent' as const,
+    type: 'Apartment',
+    source: 'Rental Feed'
+  },
+  {
+    id: 'RENT-7003',
+    address: '28 Victoria St',
+    suburb: 'Windsor',
+    state: 'VIC',
+    price: 1200,
+    beds: 3,
+    baths: 2,
+    cars: 2,
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800',
+    status: 'rent' as const,
+    type: 'House',
+    source: 'Rental Feed'
+  },
   // --- RP DATA RECORDS (Historical, Sold, Off-Market) ---
   {
     id: 'RP-5001',

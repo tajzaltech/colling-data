@@ -86,10 +86,11 @@ export default function SignInPage() {
                                         outline: 'none',
                                         transition: 'all 0.2s',
                                         color: '#1e293b',
-                                        fontWeight: '500'
+                                        fontWeight: '500',
+                                        boxSizing: 'border-box'
                                     }}
                                     onFocus={(e) => { e.target.style.borderColor = '#5ec5cf'; e.target.style.background = 'white'; e.target.style.boxShadow = '0 0 0 4px rgba(94, 197, 207, 0.1)'; }}
-                                    onBlur={(e) => { e.target.style.borderColor = '#f1f5f9'; e.target.style.background = '#f8fafc'; }}
+                                    onBlur={(e) => { e.target.style.borderColor = '#f1f5f9'; e.target.style.background = '#f8fafc'; e.target.style.boxShadow = 'none'; }}
                                 />
                             </div>
                         </div>
@@ -115,10 +116,11 @@ export default function SignInPage() {
                                         outline: 'none',
                                         transition: 'all 0.2s',
                                         color: '#1e293b',
-                                        fontWeight: '500'
+                                        fontWeight: '500',
+                                        boxSizing: 'border-box'
                                     }}
-                                    onFocus={(e) => { e.target.style.borderColor = '#5ec5cf'; e.target.style.background = 'white'; }}
-                                    onBlur={(e) => { e.target.style.borderColor = '#f1f5f9'; e.target.style.background = '#f8fafc'; }}
+                                    onFocus={(e) => { e.target.style.borderColor = '#5ec5cf'; e.target.style.background = 'white'; e.target.style.boxShadow = '0 0 0 4px rgba(94, 197, 207, 0.1)'; }}
+                                    onBlur={(e) => { e.target.style.borderColor = '#f1f5f9'; e.target.style.background = '#f8fafc'; e.target.style.boxShadow = 'none'; }}
                                 />
                             </div>
                         </div>
