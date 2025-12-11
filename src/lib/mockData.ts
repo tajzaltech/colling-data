@@ -222,11 +222,22 @@ export const mockLeads = [
   { id: '4', name: 'David Brown', email: 'david@email.com', phone: '0445 678 901', status: 'new' as const, property: '12 Park Ave', date: '2024-01-12' },
 ];
 
-export const mockAgentListings = [
-  { id: '1', address: '12 Osborne Street', status: 'active' as const, views: 1247, enquiries: 23, price: 2450000 },
-  { id: '2', address: '4/22 Chapel Street', status: 'active' as const, views: 892, enquiries: 15, price: 850000 },
-  { id: '3', address: '88 Toorak Road', status: 'active' as const, views: 2341, enquiries: 45, price: 5200000 },
-  { id: '4', address: '12 Park Avenue (Sold)', status: 'sold' as const, views: 156, enquiries: 4, price: 2100000 },
+// Define types for robustness
+export interface AgentListing {
+  id: string;
+  address: string;
+  status: 'active' | 'sold' | 'withdrawn';
+  views: number;
+  enquiries: number;
+  price: number;
+  image?: string; // Optional image property
+}
+
+export const mockAgentListings: AgentListing[] = [
+  { id: '1', address: '12 Osborne Street', status: 'active', views: 1247, enquiries: 23, price: 2450000, image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800' },
+  { id: '2', address: '4/22 Chapel Street', status: 'active', views: 892, enquiries: 15, price: 850000, image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800' },
+  { id: '3', address: '88 Toorak Road', status: 'active', views: 2341, enquiries: 45, price: 5200000, image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800' },
+  { id: '4', address: '12 Park Avenue (Sold)', status: 'sold', views: 156, enquiries: 4, price: 2100000, image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800' },
 ];
 
 export const mockBuyers = [
