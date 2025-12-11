@@ -1,8 +1,8 @@
 "use client";
 
-import { ClipboardCheck, Calendar, MapPin, CheckCircle, Clock, Plus, Search, Filter, Eye, Edit2, Trash2, ArrowRight } from "lucide-react";
+import { ClipboardCheck, Calendar, MapPin, CheckCircle, Clock, Plus, Search, Filter, Eye, Edit2, Trash2, ArrowRight, X } from "lucide-react";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AppraisalsPage() {
     // Mock Appraisals Data
@@ -49,6 +49,39 @@ export default function AppraisalsPage() {
         },
     ]);
 
+    const [showModal, setShowModal] = useState(false);
+    const [newAppraisal, setNewAppraisal] = useState({
+        address: '',
+        client: '',
+        date: '',
+        timeval: '',
+        type: 'Sales Appraisal',
+        estValue: '',
+        status: 'Pending'
+    });
+
+    const handleAddAppraisal = () => {
+        if (!newAppraisal.address || !newAppraisal.client || !newAppraisal.date || !newAppraisal.timeval) {
+            alert("Please fill in Address, Client, Date and Time.");
+            return;
+        }
+
+        const appraisal = {
+            id: appraisals.length + 1,
+            address: newAppraisal.address,
+            client: newAppraisal.client,
+            date: `${newAppraisal.date}, ${newAppraisal.timeval}`,
+            status: newAppraisal.status,
+            estValue: newAppraisal.estValue || 'TBD',
+            type: newAppraisal.type,
+            image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80' // Mock image
+        };
+
+        setAppraisals([appraisal, ...appraisals]);
+        setShowModal(false);
+        setNewAppraisal({ address: '', client: '', date: '', timeval: '', type: 'Sales Appraisal', estValue: '', status: 'Pending' });
+    };
+
     const handleDelete = (id: number) => {
         if (confirm("Are you sure you want to delete this appraisal?")) {
             setAppraisals(appraisals.filter(a => a.id !== id));
@@ -68,20 +101,23 @@ export default function AppraisalsPage() {
                         Manage valuation requests and simple presentations.
                     </p>
                 </div>
-                <button style={{
-                    padding: '0.75rem 1.5rem',
-                    background: '#5ec5cf',
-                    color: 'white',
-                    borderRadius: '0.75rem',
-                    fontWeight: '600',
-                    fontSize: '0.9rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    border: 'none',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 6px -1px rgba(94, 197, 207, 0.4)'
-                }}>
+                <button
+                    onClick={() => setShowModal(true)}
+                    style={{
+                        padding: '0.75rem 1.5rem',
+                        background: '#5ec5cf',
+                        color: 'white',
+                        borderRadius: '0.75rem',
+                        fontWeight: '600',
+                        fontSize: '0.9rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        border: 'none',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 6px -1px rgba(94, 197, 207, 0.4)'
+                    }}
+                >
                     <Plus size={18} />
                     New Appraisal
                 </button>
@@ -207,6 +243,95 @@ export default function AppraisalsPage() {
                     </motion.div>
                 ))}
             </div>
+
+            {/* New Appraisal Modal */}
+            <AnimatePresence>
+                {showModal && (
+                    <div style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 1000
+                    }}>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            style={{
+                                background: 'white',
+                                borderRadius: '1.5rem',
+                                padding: '2.5rem',
+                                maxWidth: '500px',
+                                width: '90%',
+                                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                                maxHeight: '90vh',
+                                overflowY: 'auto'
+                            }}
+                        >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                                <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>
+                                    New Appraisal
+                                </h2>
+                                <button onClick={() => setShowModal(false)} style={{ padding: '0.5rem', borderRadius: '0.5rem', border: 'none', background: '#f1f5f9', cursor: 'pointer' }}>
+                                    <X size={20} color="#64748b" />
+                                </button>
+                            </div>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                                {/* Address */}
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Property Address *</label>
+                                    <input type="text" value={newAppraisal.address} onChange={(e) => setNewAppraisal({ ...newAppraisal, address: e.target.value })} placeholder="e.g., 10 Downing St, Brighton" style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', transition: 'all 0.2s', boxSizing: 'border-box' }} />
+                                </div>
+
+                                {/* Date & Time */}
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Date *</label>
+                                        <input type="date" value={newAppraisal.date} onChange={(e) => setNewAppraisal({ ...newAppraisal, date: e.target.value })} style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Time *</label>
+                                        <input type="time" value={newAppraisal.timeval} onChange={(e) => setNewAppraisal({ ...newAppraisal, timeval: e.target.value })} style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box' }} />
+                                    </div>
+                                </div>
+
+                                {/* Client */}
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Client Name *</label>
+                                    <input type="text" value={newAppraisal.client} onChange={(e) => setNewAppraisal({ ...newAppraisal, client: e.target.value })} placeholder="e.g., Mr. Smith" style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box' }} />
+                                </div>
+
+                                {/* Value & Type */}
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Est. Value Range</label>
+                                        <input type="text" value={newAppraisal.estValue} onChange={(e) => setNewAppraisal({ ...newAppraisal, estValue: e.target.value })} placeholder="e.g., $1.5M - $1.6M" style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Type</label>
+                                        <select value={newAppraisal.type} onChange={(e) => setNewAppraisal({ ...newAppraisal, type: e.target.value })} style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', background: 'white', boxSizing: 'border-box' }}>
+                                            <option value="Sales Appraisal">Sales</option>
+                                            <option value="Rental Appraisal">Rental</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                                    <button onClick={() => setShowModal(false)} style={{ flex: 1, padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', background: 'white', color: '#64748b', fontWeight: '700', cursor: 'pointer' }}>Cancel</button>
+                                    <button onClick={handleAddAppraisal} style={{ flex: 1, padding: '0.875rem', borderRadius: '0.75rem', border: 'none', background: '#5ec5cf', color: 'white', fontWeight: '700', cursor: 'pointer', boxShadow: '0 4px 12px rgba(94, 197, 207, 0.4)' }}>Create</button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
 
         </div>
     );

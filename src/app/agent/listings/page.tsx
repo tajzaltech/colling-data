@@ -385,14 +385,14 @@ export default function AgentListingsPage() {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                             {/* Address */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Property Address</label>
+                                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Property Address *</label>
                                 <input type="text" value={newListing.address} onChange={(e) => setNewListing({ ...newListing, address: e.target.value })} placeholder="e.g., 123 Collins Street, Melbourne" style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', transition: 'all 0.2s', boxSizing: 'border-box' }} />
                             </div>
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 {/* Price */}
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Price ($)</label>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Price ($) *</label>
                                     <input type="number" value={newListing.price} onChange={(e) => setNewListing({ ...newListing, price: e.target.value })} placeholder="e.g., 2500000" style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box' }} />
                                 </div>
                                 {/* Type */}

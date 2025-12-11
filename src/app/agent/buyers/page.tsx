@@ -1,8 +1,8 @@
 "use client";
 
-import { User, MapPin, DollarSign, TrendingUp, Phone, Mail, Edit2, Trash2, Eye, Plus, Filter, Search } from "lucide-react";
+import { User, MapPin, DollarSign, TrendingUp, Phone, Mail, Edit2, Trash2, Eye, Plus, Filter, Search, X } from "lucide-react";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function BuyersPage() {
     // Mock Buyers Data
@@ -75,6 +75,35 @@ export default function BuyersPage() {
         }
     ]);
 
+    const [showModal, setShowModal] = useState(false);
+    const [newBuyer, setNewBuyer] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        budget: '',
+        status: 'New',
+        type: 'FHB',
+        suburbs: ''
+    });
+
+    const handleAddBuyer = () => {
+        if (!newBuyer.name || !newBuyer.budget) {
+            alert("Please fill in Name and Budget");
+            return;
+        }
+
+        const buyer = {
+            id: buyers.length + 1,
+            ...newBuyer,
+            suburbs: newBuyer.suburbs.split(',').map(s => s.trim()).filter(s => s),
+            engagement: 50 // Default
+        };
+
+        setBuyers([buyer, ...buyers]);
+        setShowModal(false);
+        setNewBuyer({ name: '', email: '', phone: '', budget: '', status: 'New', type: 'FHB', suburbs: '' });
+    };
+
     const handleDelete = (id: number) => {
         if (confirm("Are you sure you want to delete this buyer profile?")) {
             setBuyers(buyers.filter(b => b.id !== id));
@@ -94,20 +123,23 @@ export default function BuyersPage() {
                         Track preferences and match buyers to properties.
                     </p>
                 </div>
-                <button style={{
-                    padding: '0.75rem 1.5rem',
-                    background: '#5ec5cf',
-                    color: 'white',
-                    borderRadius: '0.75rem',
-                    fontWeight: '600',
-                    fontSize: '0.9rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    border: 'none',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 6px -1px rgba(94, 197, 207, 0.4)'
-                }}>
+                <button
+                    onClick={() => setShowModal(true)}
+                    style={{
+                        padding: '0.75rem 1.5rem',
+                        background: '#5ec5cf',
+                        color: 'white',
+                        borderRadius: '0.75rem',
+                        fontWeight: '600',
+                        fontSize: '0.9rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        border: 'none',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 6px -1px rgba(94, 197, 207, 0.4)'
+                    }}
+                >
                     <Plus size={18} />
                     Add New Buyer
                 </button>
@@ -299,6 +331,98 @@ export default function BuyersPage() {
                     </motion.div>
                 ))}
             </div>
+
+            {/* Add Buyer Modal */}
+            <AnimatePresence>
+                {showModal && (
+                    <div style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 1000
+                    }}>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            style={{
+                                background: 'white',
+                                borderRadius: '1.5rem',
+                                padding: '2.5rem',
+                                maxWidth: '500px',
+                                width: '90%',
+                                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                                maxHeight: '90vh',
+                                overflowY: 'auto'
+                            }}
+                        >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                                <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>
+                                    Add New Buyer
+                                </h2>
+                                <button onClick={() => setShowModal(false)} style={{ padding: '0.5rem', borderRadius: '0.5rem', border: 'none', background: '#f1f5f9', cursor: 'pointer' }}>
+                                    <X size={20} color="#64748b" />
+                                </button>
+                            </div>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                                {/* Name */}
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Buyer Name *</label>
+                                    <input type="text" value={newBuyer.name} onChange={(e) => setNewBuyer({ ...newBuyer, name: e.target.value })} placeholder="e.g., Sarah & John" style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', transition: 'all 0.2s', boxSizing: 'border-box' }} />
+                                </div>
+
+                                {/* Budget & Type */}
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Budget Range *</label>
+                                        <input type="text" value={newBuyer.budget} onChange={(e) => setNewBuyer({ ...newBuyer, budget: e.target.value })} placeholder="e.g., $1.2M - $1.5M" style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Type</label>
+                                        <select value={newBuyer.type} onChange={(e) => setNewBuyer({ ...newBuyer, type: e.target.value })} style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', background: 'white', boxSizing: 'border-box' }}>
+                                            <option value="FHB">First Home Buyer</option>
+                                            <option value="Investor">Investor</option>
+                                            <option value="Upsizing">Upsizing</option>
+                                            <option value="Downsizing">Downsizing</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* Contact */}
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Email</label>
+                                        <input type="email" value={newBuyer.email} onChange={(e) => setNewBuyer({ ...newBuyer, email: e.target.value })} placeholder="email@example.com" style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Phone</label>
+                                        <input type="tel" value={newBuyer.phone} onChange={(e) => setNewBuyer({ ...newBuyer, phone: e.target.value })} placeholder="Mobile Number" style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box' }} />
+                                    </div>
+                                </div>
+
+                                {/* Suburbs */}
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '700', color: '#475569', marginBottom: '0.5rem' }}>Suburbs (comma separated)</label>
+                                    <input type="text" value={newBuyer.suburbs} onChange={(e) => setNewBuyer({ ...newBuyer, suburbs: e.target.value })} placeholder="e.g., Richmond, South Yarra" style={{ width: '100%', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box' }} />
+                                </div>
+
+                                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                                    <button onClick={() => setShowModal(false)} style={{ flex: 1, padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0', background: 'white', color: '#64748b', fontWeight: '700', cursor: 'pointer' }}>Cancel</button>
+                                    <button onClick={handleAddBuyer} style={{ flex: 1, padding: '0.875rem', borderRadius: '0.75rem', border: 'none', background: '#5ec5cf', color: 'white', fontWeight: '700', cursor: 'pointer', boxShadow: '0 4px 12px rgba(94, 197, 207, 0.4)' }}>Add Buyer</button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
         </div>
     );
 }

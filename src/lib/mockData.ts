@@ -73,6 +73,7 @@ export const mockProperties = [
     status: 'active' as const,
     type: 'Land',
     source: 'REIP'
+  },
   // --- RENTAL LISTINGS ---
   {
     id: 'RENT-7001',
