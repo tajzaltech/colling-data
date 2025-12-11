@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, Edit2, Trash2, Plus, X, Bed, Bath, Car, Home, Filter, Search } from "lucide-react";
+import { Eye, Edit2, Trash2, Plus, X, Bed, Bath, Car, Home, Filter, Search, Mail, TrendingUp } from "lucide-react";
 import { mockAgentListings } from "@/lib/mockData";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
