@@ -1,6 +1,4 @@
-"use client";
-
-import { User, MapPin, DollarSign, TrendingUp, Phone, Mail, Edit2, Trash2, Eye, Plus, Filter, Search, X } from "lucide-react";
+import { MapPin, DollarSign, TrendingUp, Phone, Mail, Edit2, Trash2, Plus, Filter, Search, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 

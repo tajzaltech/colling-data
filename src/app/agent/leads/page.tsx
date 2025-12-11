@@ -1,8 +1,5 @@
-"use client";
-
-import { Check, Mail, Phone, Clock, ArrowRight, UserPlus, Filter, Search, Eye, Edit2, Trash2, X, MoreVertical } from "lucide-react";
+import { Check, Mail, Phone, Clock, UserPlus, Filter, Search, Eye, Edit2, Trash2, X } from "lucide-react";
 import { useState } from "react";
-import Link from 'next/link';
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LeadsPage() {
